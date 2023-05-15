@@ -1,9 +1,12 @@
+def info(String message){
+    echo "[INFO] $message"
+}
 
 
 def debug(String message){
-    echo "[DEBUG] $messge"
+    echo "[DEBUG] $message"
 }
 
 def error(String message){
-    echo "[ERROR] $messge"
+    echo "[ERROR] $message"
 }

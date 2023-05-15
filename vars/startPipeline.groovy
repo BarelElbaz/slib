@@ -1,21 +1,17 @@
+
+
 def call(){
     pipeline{
         agent any
 
-        tools{
-            go '1.20.1'
-        }
+        // tools{
+        //     go '1.20.1'
+        // }
 
         stages{
-            stage("Build"){
+            stage("Build & Push Services"){
                 steps{
-                    log.debug("Building go app")
-                    goBuild("bcli")
-                }
-            }
-            stage("Test"){
-                steps{
-                    goTest()
+                    buildServices(["frontend", "backend", "collector"])
                 }
             }
         }
