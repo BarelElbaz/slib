@@ -13,7 +13,7 @@ def call(List services2Build = []){
                     def serviceImage = docker.build("$imageName")
                     serviceImage.push()
                     //get the image URL to docker pull from
-                    def imageURI = docker.image("$imageName").getImageURI()
+                    def imageURI = serviceImage.id
                     log.info("$imageURI pushed successfully")
                 }
             }
