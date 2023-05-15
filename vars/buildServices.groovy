@@ -19,4 +19,8 @@ def call(List services2Build = []){
             }
         }
     }
+    parallelTasks.failFast = true
+
+    //Dispatch!
+    parallel(parallelTasks)
 }
