@@ -1,4 +1,5 @@
-properties([
+def setParameters(){
+    properties([
         parameters([
             [$class: 'DynamicReferenceParameter', 
                 choiceType: 'ET_FORMATTED_HTML',
@@ -60,9 +61,11 @@ properties([
             ]
         ])
     ])
+}
 
 
 def call(){
+    setParameters()
     pipeline{
         agent any
 
