@@ -1,4 +1,5 @@
 def call(){
+    properties()
     pipeline{
         agent any
 
