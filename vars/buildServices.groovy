@@ -12,8 +12,8 @@ def call(List services2Build = []){
                 docker.withRegistry('https://006262944085.dkr.ecr.us-east-1.amazonaws.com', 'ecr:us-east-1:aws-ecr-private') {
                     def serviceImage = docker.build("$imageName")
                     serviceImage.push()
-                    //get the image URL to docker pull from
-                    def imageURI = serviceImage.id
+                    //set the image URL
+                    def imageURI = "${env.DOCKER_REGISTRY_URL}/${serviceImage.id}"
                     log.info("$imageURI pushed successfully")
                 }
             }
