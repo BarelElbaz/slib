@@ -8,12 +8,13 @@ def call(List services2Build = []){
         parallelTasks[stageName] = {
             dir(service){
                 String imageName = "slib/${service}:${env.BUILD_NUMBER}"
+                log.info("Building ${imageName}...")
                 docker.withRegistry('https://006262944085.dkr.ecr.us-east-1.amazonaws.com', 'aws-private-ecr') {
                     def serviceImage = docker.build("$imageName")
                     serviceImage.push()
                     //get the image URL to docker pull from
                     def imageURI = docker.image("$imageName").imageId
-
+                    log.info("$imageURI pushed successfully")
                 }
             }
         }
