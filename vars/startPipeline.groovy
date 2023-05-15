@@ -11,6 +11,7 @@ def call(){
         stages{
             stage("Build & Push Services"){
                 steps{
+                    echo " Build & Push Services stage ".center(61, "=")
                     buildServices(["frontend", "backend", "collector"])
                 }
             }
