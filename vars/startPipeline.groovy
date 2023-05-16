@@ -46,7 +46,7 @@ def initParameters(){
 
                         def services = ["frontend", "backend", "collector"]
                         services.each{ service ->
-                            html += "<option value=\"${service}\">${service}</option>"
+                            html += "<option>\${service}</option>"
                         }
 
                         html += '''
