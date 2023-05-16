@@ -1,3 +1,5 @@
+import org.develeap.JobData
+
 def initParameters(){
     properties([
         parameters([
@@ -77,7 +79,15 @@ def call(){
             stage("Build & Push Services"){
                 steps{
                     echo " Build & Push Services stage ".center(61, "=")
-                    buildServices(["frontend", "backend", "collector"])
+                    buildServices(env.BUILD_SERVICES.split(","))
+                }
+            }
+        }
+        post{
+            always{
+                script{
+                    env.JOB_DATA = JobData.instance.toString()
+                    reportBack()
                 }
             }
         }

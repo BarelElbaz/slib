@@ -1,4 +1,4 @@
-
+import org.develeap.JobData
 
 def call(List services2Build = []){
     def parallelTasks = [:]
@@ -14,6 +14,7 @@ def call(List services2Build = []){
                     serviceImage.push()
                     //set the image URL
                     def imageURI = "${env.DOCKER_REGISTRY_URL}/${serviceImage.id}"
+                    JobData.instance.builtServices[service] = imageURI
                     log.info("$imageURI pushed successfully")
                 }
             }
