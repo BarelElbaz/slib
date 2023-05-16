@@ -1,0 +1,155 @@
+<!-- PARAMETER -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
+<script>
+    $(document).ready(function() {
+        $('#services2build option').mousedown(function(e) {
+            e.preventDefault();
+            var originalScrollTop = $(this).parent().scrollTop();
+            console.log(originalScrollTop);
+            $(this).prop('selected', $(this).prop('selected') ? false : true);
+            var self = this;
+            $(this).parent().focus();
+            setTimeout(function() {
+                $(self).parent().scrollTop(originalScrollTop);
+            }, 0);
+
+            return false;
+        });
+        $('select').selectize({
+            sortField: 'text'
+        });
+    });
+</script>
+<select name="value" size="15" multiple="multiple" id="services2build" placeholder="Pick a service...">
+    <option>service1</option>
+    <option>service2</option>
+    <option>service3</option>
+</select>
+<!-- END OF PARAMETERS -->
+
+<!-- REPORT -->
+
+<style type="text/css" data-inline="true">
+    .green-table{
+        border:1px solid black;
+	    border-collapse:collapse;
+	    text-align:left
+    }
+    .green-table th{
+        border: 1px solid black;
+        border-collapse: collapse;
+        text-align: left;
+        background-color: lightgreen;
+        padding: 5px;
+    }
+    .green-table td{
+        border:1px solid black;
+	    padding:5px
+    }
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<body>
+<%
+    import net.sf.json.JSONSerializer
+    import hudson.model.Result
+
+    //get data from pipeline by accessing its env variables
+    def envOverrides = it.getAction("org.jenkinsci.plugins.workflow.cps.EnvActionImpl").getOverriddenEnvironment()
+    //Parse the json
+    def jobData = JSONSerializer.toJSON(envOverrides["JOB_DATA"])
+
+    def text, color
+    if(build.result == Result.SUCCESS){
+        text = "PASSED"
+        color = "color:green;font-size:24pt;"
+    }else if(build.result == Result.FAILURE){
+        text = "FAILED"
+        color = "color:red;font-size:24pt;"
+    }
+%>
+
+    <div class="header">
+        <!-- GENERAL INFO -->
+        <table>
+        <tr class="gray">
+            <td> <!-- /*  valign="center"*/-->
+            <b style="$color">BUILD ${text}</b>
+            </td>
+        </tr>
+        <tr>
+            <td>Build URL</td>
+            <td>
+            <a href="${rooturl}${build.url}">${rooturl}${build.url}</a>
+            </td>
+        </tr>
+        <tr>
+            <td>Project:</td>
+            <td>$project.name</td>
+        </tr>
+        <tr>
+            <td>Date of build:</td>
+            <td>${it.timestampString}</td>
+        </tr>
+        <tr>
+            <td>Build duration:</td>
+            <td>${build.durationString.minus(" and counting")}</td>
+        </tr>
+        <tr>
+            <td>Build cause:</td>
+            <td>
+    <%
+        for (hudson.model.Cause cause : build.causes) {
+    %>
+            ${cause.shortDescription}
+    <%
+        }
+    %>
+            </td>
+        </tr>
+        </table>
+        <table class="green-table">
+            <tr>
+                <th>
+                    <p align=center style='margin:0cm;text-align:center'>
+                        <b>Service</b>
+                        <o:p></o:p>
+                    </p>
+                </th>
+                <th>
+                    <p align=center style='margin:0cm;text-align:center'>
+                        <b>Image URI</b>
+                        <o:p></o:p>
+                    </p>
+                </th>
+            </tr>
+    <%
+            jobData.builtServices.each{ service, imageURI -> 
+    %>
+                <tr>
+                    <td>
+                        <p style='margin:0cm'>
+                            <span>
+                                $service
+                            </span>
+                            <o:p></o:p>
+                        </p>
+                    </td>
+                    <td>
+                        <p style='margin:0cm'>
+                            <span>
+                                $imageURI
+                            </span>
+                            <o:p></o:p>
+                        </p>
+                    </td>
+                </tr>
+    <%      
+            }
+    %>
+        </table>
+    </div>
+</body>
+<!-- END OF REPORT -->
