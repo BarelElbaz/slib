@@ -79,7 +79,7 @@ def call(){
             stage("Build & Push Services"){
                 steps{
                     echo " Build & Push Services stage ".center(61, "=")
-                    buildServices(env.BUILD_SERVICES.split(","))
+                    buildServices(["collector", "frontend"])
                 }
             }
         }
